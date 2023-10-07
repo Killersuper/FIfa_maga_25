@@ -1,0 +1,161 @@
+import pygame as pg
+import time
+import random
+pg.init()
+
+size = (1000, 500)
+screen = pg.display.set_mode(size)
+
+fps = 30
+clock = pg.time.Clock()
+fon = pg.image.load('T_Cort_Up.jpg')
+f = pg.transform.scale(fon, size)
+
+rect_0 = pg.Rect(900, 200, 20, 100)
+rect_1 = pg.Rect(100, 200, 20, 100)
+rect_2 = pg.Rect(size[0] // 2, size[1] // 2, 20, 20)
+m = random.randint(1, 2)
+blue=0
+red=0
+f1=pg.font.Font('font.otf', 70) 
+def Count_screen():
+    text1 = f1.render(f'{blue} - {red}', True, pg.Color('black'))
+    text_rect1 = text1.get_rect(center=(size[0] // 2,70))
+    screen.blit(text1, text_rect1)
+    
+
+
+def Count_final():
+    if blue > red:
+        text2 = f1.render(f'Синий игрок победил, {blue} - {red}', True ,pg.Color('blue'))
+    else:
+        text2 = f1.render(f'Красный игрок победил, {blue} - {red}', True, pg.Color('red'))
+    text_rect2 = text2.get_rect(center=(size[0] // 2, size[1] // 2))
+    screen.blit(text2, text_rect2)
+
+if m == 1:
+    speedx = 'right'
+else:
+    speedx = 'left'
+
+if m == 1:
+    speedy = 'down'
+else:
+    speedy = 'up'
+
+def Count():
+    if blue>red:
+        print(f'Синий игрок выиграл,{blue}-{red}')
+    elif red>blue:
+        print(f'Красный игрок выиграл,{blue}-{red}')
+    elif blue==red:
+        print(f'Ничья,{blue}-{red}')
+
+while True:
+    for event in pg.event.get():
+        if event.type == pg.QUIT:
+            Count()
+            pg.quit()
+            quit()
+            
+
+    keys = pg.key.get_pressed()
+
+    if speedx == 'left':
+        rect_2.x -= 9
+    if speedx == 'right':
+        rect_2.x += 9
+    if rect_2.right >= size[0]:
+        rect_2.center=(size[0] // 2, size[1] // 2)
+        blue+=1
+        speedx='left'
+    if rect_2.left <= 0:
+        rect_2.center=(size[0] // 2, size[1] // 2)
+        red+=1
+        speedx='right'
+
+    if speedy == 'up':
+        rect_2.y -= 9
+        if speedx=="right" and rect_2.centery<=rect_0.centery:
+            rect_0.y -=6
+
+    if speedy == 'down':
+        rect_2.y += 9
+        if speedx=="right" and rect_2.centery>=rect_0.centery:
+            rect_0.y +=6
+    if rect_2.bottom >= size[1] or rect_2.top <= 0:
+        speedy = 'up' if speedy == 'down' else 'down'
+
+    if rect_2.colliderect(rect_1):
+        speedx = 'left' if speedx == 'right' else 'right'
+        # speedy = 'up' if speedy == 'down' else 'down'
+
+    if rect_2.colliderect(rect_0):
+        speedx = 'left' if speedx == 'right' else 'right'
+        # speedy = 'up' if speedy == 'down' else 'down'
+
+        
+
+    if keys[pg.K_s]:
+        rect_1.y += 10
+    if keys[pg.K_w]:
+        rect_1.y -= 10
+    if keys[pg.K_DOWN]:
+        rect_0.y += 10
+    if keys[pg.K_UP]:
+        rect_0.y -= 10
+
+    screen.blit(f, (0, 0))
+
+    pg.draw.rect(screen, pg.Color('blue'), rect_1)
+    pg.draw.rect(screen, pg.Color('red'), rect_0)
+    pg.draw.ellipse(screen, pg.Color('black'), rect_2)
+    Count_screen()
+    # if blue>=1 or red>=1:
+    #     Count_final() 
+    #     start_time=time.time()
+    #     if time.time() - start_time > 3.0:
+    #         break
+        
+    
+    
+
+    pg.display.flip()
+    clock.tick(fps)
+
+
+
+
+# small_rect.x=30 # квадрат будет на 30 по х (левая сторона)
+# small_rect.y=40 # квадрат будет на 40 по y (верхняя сторона)
+# small_rect.top=20 # тоже самое что и small_rect.y
+# small_rect.bottom=60 # квадрат будет на 60 по y (нижняя сторона)
+# small_rect.left=25 # тоже самое что и small_rect.x
+# small_rect.right=90 # квадрат будет на 90 по х (правая сторона)
+# small_rect.topleft=(50,40) # квадрат будет на 30 по х (левая сторона) и квадрат будет на 40 по y (верхняя сторона)
+# small_rect.topright=(20,30) # квадрат будет на 20 по х (правая сторона) и квадрат будет на 30 по y (верхняя сторона)
+# small_rect.center=(size[0]// 2, size[1]// 2) # квадрат будет прямо в центре
+
+
+
+# pg.draw.rect(screen, color, (x, y, width, height)) — функция для отрисовки прямоугольника.
+
+# pg.draw.circle(screen, color, (centerx, centery), radius) — функция для отрисовки окружности.
+
+# pg.draw.ellipse(screen, color, (x, y, width, height)) — функция для отрисовки овала.
+
+# pg.draw.polygon(screen, color, ((x, y), (x, y), (x, y))) — функция для отрисовки многоугольника.
+
+# pg.draw.line(screen, color, (startx, starty), (finishx, finishy), width) — функция для отрисовки линии.
+
+
+# direction='right'
+# while True:
+#     if small_rect.left==0:
+#         direction='right'
+#     if small_rect.right==size[0]:
+#         direction='left'
+#     if direction=='left':
+#         small_rect.x-=10
+#     if direction=='right':
+#         small_rect.x+=10
