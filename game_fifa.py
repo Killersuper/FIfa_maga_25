@@ -263,6 +263,8 @@ while True:
         break
         
 
+    if fps==100000000000:
+        print('чо? почему это сработало? у меня фпс 100000000000 что ли? ашалеть')
     Count_screen()
     pg.display.flip()
     clock.tick(fps)
